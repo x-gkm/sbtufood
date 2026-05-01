@@ -50,11 +50,15 @@ func extract(reader io.Reader) ([]Menu, error) {
 			for item := range strings.SplitSeq(raw, "/") {
 				item = strings.TrimSpace(item)
 				item = strings.ToLowerSpecial(unicode.TurkishCase, item)
-				items = append(items, item)
+				if item != "" && item != "..." {
+					items = append(items, item)
+				}
 			}
 		}
 
-		menus = append(menus, Menu{date, items})
+		if items != nil {
+			menus = append(menus, Menu{date, items})
+		}
 	}
 
 	return menus, nil
