@@ -1,6 +1,7 @@
 package menu
 
 import (
+	"context"
 	"errors"
 	"io"
 	"net/http"
@@ -64,8 +65,13 @@ func extract(reader io.Reader) ([]Menu, error) {
 	return menus, nil
 }
 
-func Month() ([]Menu, error) {
-	resp, err := http.Get("https://sivas.edu.tr/yemek-listesi")
+func Month(ctx context.Context) ([]Menu, error) {
+	req, err := http.NewRequestWithContext(ctx, "GET", "https://sivas.edu.tr/yemek-listesi", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +86,7 @@ func dateEqual(a, b time.Time) bool {
 	return ya == yb && ma == mb && da == db
 }
 
-func Today() (Menu, error) {
+func Today(ctx context.Context) (Menu, error) {
 	now := time.Now().In(locationTr)
 
 	switch now.Weekday() {
@@ -88,7 +94,7 @@ func Today() (Menu, error) {
 		return Menu{}, NoServiceError
 	}
 
-	month, err := Month()
+	month, err := Month(ctx)
 	if err != nil {
 		return Menu{}, err
 	}
