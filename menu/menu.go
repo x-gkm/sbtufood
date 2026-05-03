@@ -13,8 +13,8 @@ import (
 	"github.com/goodsign/monday"
 )
 
-var NotFoundError = errors.New("couldn't find today's menu")
-var NoServiceError = errors.New("food service is not available during weekends")
+var ErrNotFound = errors.New("couldn't find today's menu")
+var ErrNoService = errors.New("food service is not available during weekends")
 
 var locationTr *time.Location
 
@@ -91,7 +91,7 @@ func Today(ctx context.Context) (Menu, error) {
 
 	switch now.Weekday() {
 	case time.Saturday, time.Sunday:
-		return Menu{}, NoServiceError
+		return Menu{}, ErrNoService
 	}
 
 	month, err := Month(ctx)
@@ -105,5 +105,5 @@ func Today(ctx context.Context) (Menu, error) {
 		}
 	}
 
-	return Menu{}, NotFoundError
+	return Menu{}, ErrNotFound
 }
