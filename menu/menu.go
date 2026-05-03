@@ -27,8 +27,8 @@ func init() {
 }
 
 type Menu struct {
-	Date  time.Time
-	Items []string
+	Date  time.Time `json:"menu"`
+	Items []string  `json:"items"`
 }
 
 func extract(reader io.Reader) ([]Menu, error) {
