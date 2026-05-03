@@ -1,4 +1,4 @@
-package menu
+package sbtufood
 
 import (
 	"context"
